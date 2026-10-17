@@ -135,24 +135,3 @@ All reported timings are **CPU times in seconds**, measured using `time.process_
 CPU time measures the CPU resources consumed by the Python process, including its computational threads. With multithreaded numerical libraries, CPU time can exceed elapsed wall-clock time. The `total(s)` column is setup plus solve CPU time; use this column for the manuscript's timing table.
 
 These measurements exclude construction of the system blocks, spectral diagnostics, plotting, and log-file output. The iterative solve timer includes the final true-residual computation inside `gmres_right()`. The direct LU timer stops before its residual is computed. The diagonal and triangular practical methods share one factorization setup in the driver; each method's reported total includes that setup cost once.
-
-## Recording the computational environment
-
-Record the processor model, installed RAM, operating system, package versions, BLAS implementation, configured BLAS threads, and timing convention alongside the results.
-
-Print software versions:
-
-```sh
-python -c "import sys, numpy, scipy, matplotlib; print(sys.version); print('NumPy:', numpy.__version__); print('SciPy:', scipy.__version__); print('Matplotlib:', matplotlib.__version__)"
-```
-
-Inspect the numerical library thread configuration:
-
-```sh
-python -m pip install threadpoolctl
-python -c "import numpy, scipy.linalg; from threadpoolctl import threadpool_info; from pprint import pprint; pprint(threadpool_info())"
-```
-
-The author's inspected environment reported eight configured OpenBLAS threads for both NumPy and SciPy. This is a thread-pool setting; it does not mean every operation uses all eight threads. Check for thread limits in the scripts or environment when documenting a particular run.
-
-For reproducibility, keep the scripts, `results.txt`, generated figures, and environment details together for each reported experiment.
